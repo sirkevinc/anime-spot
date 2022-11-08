@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model Anime {
+  id          Int       @id @default(sequence())
+  image       String    @db.String
+  name        String    @db.String
+  year        Int
+  mal         String    @db.String
+  description String    @db.String
+  locations Location[]
+}
+
+model Location {
+  id          Int       @id @default(sequence())
+  name        String    @db.String
+  image       String    @db.String
+  description String    @db.String
+  animeId     Int
+  anime       Anime     @relation(fields: [animeId], references: [id])
+  longitude   Float
+  latitude    Float
+  address     String    @db.String
+  city        String    @db.String
+  additional  String?
+  state       String    @db.String
+  country     String    @db.String   
+}
+
+model Visited {
+  id          Int       @id @default(sequence())
+  locationId  Int
+  profileId   Int
+  profile     Profile   @relation(fields:[profileId], references: [id])
+  notes       String    @db.String
+}
+
+model Profile {
+  id        Int         @id @default(sequence())
+  bio       String?
+  user      User        @relation(fields: [userId], references: [id])
+  userId    Int         @unique
+  visted    Visited[]
+  bookmarks Bookmark[]
+}
+
+model Bookmark {
+  id          Int       @id @default(sequence())
+  locationId  Int
+  profileId   Int
+  profile     Profile   @relation(fields:[profileId], references: [id])
+  notes       String    @db.String
+}
+
+model User {
+  id          Int       @id @default(sequence())
+  createdAt   DateTime  @default(now())
+  username    String    @unique
+  picture     String    @db.String
+  email       String    @unique
+  profile     Profile?
+  role        Role      @default(USER)
+}
+
+enum Role {
+  ADMIN
+  USER
+}

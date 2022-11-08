@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "sourceMap": true,
+      "outDir": "dist",
+      "strict": true,
+      "lib": ["esnext", "esnext.bigint"],
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "strictPropertyInitialization": false,
+      "module": "CommonJS",
+      "target": "es2018",
+      "emitDecoratorMetadata": true,
+    }
+  }
+  
