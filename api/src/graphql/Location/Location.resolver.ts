@@ -22,16 +22,29 @@ export class LocationResolver {
         return result;
     }
 
-    @Query(() => [Location])
-    async getNearbyLocations() {
-        console.log("use lat/long info")
-    }
+    // @Query(() => [Location])
+    // async getNearbyLocations() {
+    //     console.log("use lat/long info")
+    // }
 
     @Query(() => Location) 
     async getLocationById(@Arg("locationId") locationId: number, @Ctx() ctx: Context) {
         const result = await ctx.prisma.location.findUnique({
             where: {
                 id: locationId
+            }
+        })
+        return result;
+    }
+
+    @Query(() => [Location])
+    async getLocationBySearch(@Arg("searchTerm") searchTerm: string, @Ctx() ctx: Context) {
+        const result = await ctx.prisma.location.findMany({
+            where:{
+                OR: {
+                    country: searchTerm,
+                    city: searchTerm
+                }
             }
         })
         return result;
@@ -46,29 +59,31 @@ export class LocationResolver {
             });
             return result;
         }
-    @Mutation(() => Location)
-    async deleteLocation(
-        @Arg("locationId") locationId: number,
-        @Ctx() ctx: Context): Promise<Location> {
-            const result = await ctx.prisma.location.delete({
-                where: {
-                    id: locationId
-                }
-            });
-            return result;
-        }
-    @Mutation(() => Location)
-    async updateLocation(
-        @Arg("data") data: LocationUpdateInput,
-        @Arg("locationId") locationId: number,
-        @Ctx() ctx: Context): Promise<Location> {
-            const updateResult = await ctx.prisma.location.update({
-                where: {
-                    id: locationId,
-                },
-                data
-            })
-            return updateResult;
-        }
 
+        
+        @Mutation(() => Location)
+        async updateLocation(
+            @Arg("data") data: LocationUpdateInput,
+            @Arg("locationId") locationId: number,
+            @Ctx() ctx: Context): Promise<Location> {
+                const updateResult = await ctx.prisma.location.update({
+                    where: {
+                        id: locationId,
+                    },
+                    data
+                })
+                return updateResult;
+            }
+            
+        @Mutation(() => Location)
+        async deleteLocation(
+            @Arg("locationId") locationId: number,
+            @Ctx() ctx: Context): Promise<Location> {
+                const result = await ctx.prisma.location.delete({
+                    where: {
+                        id: locationId
+                    }
+                });
+                return result;
+            }
 }

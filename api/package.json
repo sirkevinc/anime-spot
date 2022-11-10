@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.16",
     "@prisma/client": "^4.6.0",
     "apollo-server": "^3.11.0",
     "class-validator": "^0.13.2",

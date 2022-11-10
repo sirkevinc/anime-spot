@@ -11,7 +11,7 @@ import {
     InputType,
     Field
 } from "type-graphql"
-import { Anime, AnimeCreateInput } from "./Anime.schema"
+import { Anime, AnimeCreateInput, AnimeUpdateInput } from "./Anime.schema"
 import { Context } from "../../context"
 
 
@@ -19,7 +19,11 @@ import { Context } from "../../context"
 export class AnimeResolver {
     @Query(() => [Anime])
     async getAllAnime(@Ctx() ctx: Context) {
-        const result = ctx.prisma.anime.findMany();
+        const result = ctx.prisma.anime.findMany({
+            include: {
+                locations: true
+            }
+        });
         return result;
     }
     
@@ -28,6 +32,9 @@ export class AnimeResolver {
         const result = ctx.prisma.anime.findUnique({
             where: {
                 id
+            },
+            include: {
+                locations: true
             }
         })
         return result;
@@ -39,6 +46,32 @@ export class AnimeResolver {
         @Ctx() ctx: Context): Promise<Anime> {
             const result = await ctx.prisma.anime.create({
                 data
+            })
+            return result;
+        }
+
+    @Mutation(() => Anime)
+    async updateAnime(
+        @Arg("data") data: AnimeUpdateInput,
+        @Arg("id") id: number,
+        @Ctx() ctx: Context): Promise<Anime> {
+            const result = await ctx.prisma.anime.update({
+                where: {
+                    id
+                },
+                data
+            })
+            return result;
+        }
+    
+    @Mutation(() => Anime)
+    async deleteAnimme(
+        @Arg("id") id: number,
+        @Ctx() ctx: Context): Promise<Anime> {
+            const result = await ctx.prisma.anime.delete({
+                where: {
+                    id
+                }
             })
             return result;
         }

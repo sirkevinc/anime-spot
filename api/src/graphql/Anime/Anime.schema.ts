@@ -18,7 +18,7 @@ export class Anime {
     year: number
 
     @Field((type) => String)
-    mal: string
+    mal: string | null
     
     @Field((type) => String)
     description: string
@@ -45,6 +45,7 @@ export class AnimeCreateInput implements Partial<Anime> {
     description: string
 }
 
+@InputType()
 export class AnimeUpdateInput implements Partial<Anime> {
     @Field((type) => String)
     image: string

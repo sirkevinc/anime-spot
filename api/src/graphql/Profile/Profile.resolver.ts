@@ -44,4 +44,16 @@ export class ProfileResolver {
             })
             return updateResult;
         }
+
+        @Mutation(() => Profile)
+        async deleteProfile(
+            @Arg("userId") userId: number,
+            @Ctx() ctx: Context): Promise<Profile> {
+                const result = await ctx.prisma.profile.delete({
+                    where: {
+                        userId
+                    }
+                })
+                return result;
+            }
 }

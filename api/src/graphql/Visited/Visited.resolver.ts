@@ -34,4 +34,16 @@ export class VisitedResolver {
             });
             return result;
         }
+    
+        @Mutation(() => Visited)
+        async deleteVisited(
+            @Arg("id") id: number,
+            @Ctx() ctx: Context): Promise< Visited> {
+                const result = await ctx.prisma.visited.delete({
+                    where: {
+                        id
+                    }
+                })
+                return result;
+            }
 }

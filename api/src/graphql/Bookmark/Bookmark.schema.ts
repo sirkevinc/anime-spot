@@ -9,14 +9,20 @@ export class Bookmark {
     id!: number
 
     @Field((type) => ID)
-    locationId!: number
+    locationId: number
 
     @Field((type) => ID)
-    profileId!: number
+    profileId: number    
 
     @Field((type) => Profile)
-    profile: Profile
+    profile?: Profile
+}
 
-    @Field((type) => String)
-    notes: string
+@InputType()
+export class BookmarkCreateInput implements Partial<Bookmark> {
+    @Field((type) => ID)
+    locationId: number
+
+    @Field((type) => ID)
+    profileId: number
 }
