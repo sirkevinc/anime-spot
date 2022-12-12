@@ -18,17 +18,17 @@ export class Visited {
     profile?: Profile
 
     @Field((type) => String, { nullable: true })
-    notes: string
+    notes?: string | null
 }
 
 @InputType()
-export class VistedCreateInput implements Partial<Visited> {
-    @Field((type) => ID)
+export class VisitedCreateInput implements Partial<Visited> {
+    @Field((type) => Number)
     locationId: number
 
-    @Field((type) => ID)
+    @Field((type) => Number)
     profileId: number
 
-    @Field((type) => String)
-    notes: string
+    @Field((type) => String, { nullable: true })
+    notes?: string | null
 }

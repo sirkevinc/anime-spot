@@ -18,7 +18,11 @@ import { Location, LocationCreateInput, LocationUpdateInput } from "./Location.s
 export class LocationResolver {
     @Query(() => [Location])
     async getAllLocations(@Ctx() ctx: Context) {
-        const result = await ctx.prisma.location.findMany();
+        const result = await ctx.prisma.location.findMany({
+            include: {
+                anime: true
+            }
+        });
         return result;
     }
 
@@ -32,6 +36,9 @@ export class LocationResolver {
         const result = await ctx.prisma.location.findUnique({
             where: {
                 id: locationId
+            },
+            include: {
+                anime: true
             }
         })
         return result;
@@ -41,10 +48,37 @@ export class LocationResolver {
     async getLocationBySearch(@Arg("searchTerm") searchTerm: string, @Ctx() ctx: Context) {
         const result = await ctx.prisma.location.findMany({
             where:{
-                OR: {
-                    country: searchTerm,
-                    city: searchTerm
-                }
+                OR: [
+                    {
+                        name: {
+                            contains: searchTerm,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        country: {
+                            contains: searchTerm,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        city: {
+                            contains: searchTerm,
+                            mode: "insensitive"
+                        }
+                    },
+                    {
+                        anime: {
+                            name: {
+                                contains: searchTerm,
+                                mode: "insensitive"
+                            }
+                        }
+                    }
+                ]
+            },
+            include: {
+                anime: true
             }
         })
         return result;

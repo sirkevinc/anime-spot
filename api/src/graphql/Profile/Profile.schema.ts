@@ -17,7 +17,7 @@ export class Profile {
     user?: User    
 
     @Field((type) => ID)
-    userId: number
+    userId: string
 
     @Field((type) => [Visited], { nullable: true })
     visited?: [Visited] | null
@@ -31,8 +31,8 @@ export class ProfileCreateInput implements Partial<Profile> {
     @Field((type) => String)
     bio: string | null
 
-    @Field((type) => Number)
-    userId: number
+    @Field((type) => ID)
+    userId: string
 }
 
 @InputType()

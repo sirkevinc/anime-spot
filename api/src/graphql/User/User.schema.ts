@@ -8,7 +8,7 @@ import { Role } from "@prisma/client"
 @ObjectType()
 export class User {
     @Field((type) => ID)
-    id!: number
+    id!: string
 
     @Field((type) => Date)
     createdAt: Date
@@ -32,6 +32,9 @@ export class User {
 
 @InputType()
 export class UserCreateInput implements Partial<User> {
+    @Field((type) => ID)
+    id: string
+
     @Field()
     email: string
 

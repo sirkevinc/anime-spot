@@ -28,7 +28,7 @@ export class UserResolver {
     }
 
     @Query(() => User)
-    async getUser(@Arg("userId") userId: number, @Ctx() ctx: Context) {
+    async getUser(@Arg("userId") userId: string, @Ctx() ctx: Context) {
         return ctx.prisma.user.findUnique({
             where: {
                 id: userId
@@ -40,19 +40,30 @@ export class UserResolver {
     }
 
     @Mutation(() => User)
-    async singupUser(
+    async signupUser(
         @Arg("data") data: UserCreateInput,
         @Ctx() ctx: Context): Promise<User> {
-            const userResult = await ctx.prisma.user.create({
-                data
-            });
-            const userId = await userResult.id;
-            const profileResult: ProfileCreateInput = await ctx.prisma.profile.create({
-                data: {
-                    bio: "",
-                    userId
+            const user = await ctx.prisma.user.findUnique({
+                where: {
+                    email: data.email
                 }
-            });
-            return userResult;
+            })
+            if (user) {
+                console.log("user exists")
+                return user;
+            } else {
+                const userResult = await ctx.prisma.user.create({
+                    data
+                });
+                const userId = await userResult.id;
+                const profileResult: ProfileCreateInput = await ctx.prisma.profile.create({
+                    data: {
+                        bio: "",
+                        userId
+                    }
+                });
+                console.log("user created")
+                return userResult;
+            }
         }
 }

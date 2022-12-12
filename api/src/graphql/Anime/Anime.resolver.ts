@@ -28,10 +28,30 @@ export class AnimeResolver {
     }
     
     @Query(() => Anime)
-    async getAnime(@Arg("id") id: number, @Ctx() ctx: Context) {
+    async getAnimeById(@Arg("id") id: number, @Ctx() ctx: Context) {
         const result = ctx.prisma.anime.findUnique({
             where: {
                 id
+            },
+            include: {
+                locations: true
+            }
+        })
+        return result;
+    }
+
+    @Query(() => [Anime])
+    async getAnimeBySearch(@Arg("searchTerm") searchTerm: string, @Ctx() ctx: Context) {
+        const result = await ctx.prisma.anime.findMany({
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: searchTerm,
+                            mode: "insensitive"
+                        }
+                    },
+                ]
             },
             include: {
                 locations: true

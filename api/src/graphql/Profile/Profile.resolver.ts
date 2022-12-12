@@ -22,11 +22,16 @@ export class ProfileResolver {
         return result;
     }
     @Query(() => Profile)
-    async getProfile(@Arg("userId") userId: number, @Ctx() ctx: Context) {
+    async getProfile(@Arg("userId") userId: string, @Ctx() ctx: Context) {
         const result = await ctx.prisma.profile.findUnique({
             where: {
                 userId
-            }
+            },
+            include: {
+                user: true,
+                visited: true,
+                bookmarks: true
+            },
         })
         return result;
     }
@@ -34,7 +39,7 @@ export class ProfileResolver {
     @Mutation(() => Profile)
     async updateProfile(
         @Arg("data") data: ProfileUpdateInput,
-        @Arg("userId") userId: number,
+        @Arg("userId") userId: string,
         @Ctx() ctx: Context): Promise<Profile> {
             const updateResult = await ctx.prisma.profile.update({
                 where: {
@@ -47,7 +52,7 @@ export class ProfileResolver {
 
         @Mutation(() => Profile)
         async deleteProfile(
-            @Arg("userId") userId: number,
+            @Arg("userId") userId: string,
             @Ctx() ctx: Context): Promise<Profile> {
                 const result = await ctx.prisma.profile.delete({
                     where: {
